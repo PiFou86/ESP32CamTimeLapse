@@ -3,8 +3,11 @@
 #include "camera.h"
 #include "lapse.h"
 
-const char *ssid = "...";
-const char *password = "...";
+const char* ssid = "CabaneOiseaux";
+const char* password = "Bonjour01.+";
+IPAddress adresseIPInterne(192, 168, 23, 1);
+IPAddress passerelle(192, 168, 23, 1);
+IPAddress masqueReseau(255, 255, 255, 0);
 
 void startCameraServer();
 
@@ -16,17 +19,16 @@ void setup()
 	initFileSystem();
 	initCamera();
 
-	WiFi.begin(ssid, password);
-	while (WiFi.status() != WL_CONNECTED)
-	{
-		delay(500);
-		Serial.print(".");
-	}
+        WiFi.softAPConfig(adresseIPInterne, passerelle, masqueReseau);
+	WiFi.softAP(ssid, password);
+	Serial.print("Adresse IP du point d'accès : ");
+	Serial.println(WiFi.softAPIP());
+  
 	Serial.println("");
 	Serial.println("WiFi connected");
 	startCameraServer();
 	Serial.print("Camera Ready! Use 'http://");
-	Serial.print(WiFi.localIP());
+	Serial.print(WiFi.softAPIP());
 	Serial.println("' to connect");
 }
 
